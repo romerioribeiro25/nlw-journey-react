@@ -6,14 +6,11 @@ interface Link {
   url: string;
 }
 
-export interface CreateLinkDto {
-  title: string | undefined;
-  url: string | undefined;
-}
+export type CreateLinkDto = Omit<Link, "id">;
 
 export function useLinksHook() {
   async function get(tripId: string): Promise<Link[]> {
-    const response = await api.get(`trips/${tripId}/links`);
+    const response = await api.get(`/trips/${tripId}/links`);
     return response.data.activities;
   }
 
