@@ -10,12 +10,12 @@ interface Activity {
   }[];
 }
 
-interface CreateActivityDto {
+export interface CreateActivityDto {
   title: string | undefined;
   occurs_at: string | undefined;
 }
 
-export function useActivities() {
+export function useActivitiesHook() {
   const get = useCallback(async (tripId: string): Promise<Activity[]> => {
     const response = await api.get(`trips/${tripId}/activities`);
     return response.data.activities;
