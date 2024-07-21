@@ -1,15 +1,10 @@
 import { CircleCheck } from "lucide-react";
-import { useEffect } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useActivities } from "../../data/contexts/activities";
 
 export function Activities() {
-  const { activities, getActivities } = useActivities();
-
-  useEffect(() => {
-    getActivities();
-  }, [getActivities]);
+  const { activities } = useActivities();
 
   return (
     <div className="space-y-8">

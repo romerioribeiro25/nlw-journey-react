@@ -40,20 +40,27 @@ export function ActivitiesProvider({ children }: ActivitiesProviderProps) {
   const useActivities = useActivitiesHook();
 
   const getActivities = useCallback(async () => {
-    console.log("getActivities");
     const response = await useActivities.get(tripId as string);
     setActivities(response);
-  }, []);
+  }, [tripId, useActivities]);
 
-  async function createActivities(createActivityDto: CreateActivityDto) {
-    await useActivities.create(tripId as string, createActivityDto);
-    await getActivities();
-  }
+  const createActivities = useCallback(
+    async (createActivityDto: CreateActivityDto) => {
+      await useActivities.create(tripId as string, createActivityDto);
+      await getActivities();
+    },
+    [tripId, getActivities, useActivities]
+  );
+
+  // async function createActivities(createActivityDto: CreateActivityDto) {
+  //   await useActivities.create(tripId as string, createActivityDto);
+  //   await getActivities();
+  // }
 
   useEffect(() => {
     getActivities();
     // api.get(`trips/${tripId}/activities`).then(response => setActivities(response.data.activities))
-  }, [getActivities]);
+  }, []);
 
   return (
     <ActivitiesContext.Provider
