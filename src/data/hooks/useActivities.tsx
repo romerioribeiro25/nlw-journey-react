@@ -11,8 +11,8 @@ interface Activity {
 }
 
 interface CreateActivityDto {
-  title: string;
-  occurs_at: string;
+  title: string | undefined;
+  occurs_at: string | undefined;
 }
 
 export function useActivities() {
@@ -23,9 +23,7 @@ export function useActivities() {
 
   const create = useCallback(
     async (tripId: string, createActivityDto: CreateActivityDto) => {
-      await api.post(`/trips/${tripId}/activities`, {
-        ...createActivityDto,
-      });
+      await api.post(`/trips/${tripId}/activities`, createActivityDto);
     },
     []
   );

@@ -1,33 +1,36 @@
 import { Calendar, Tag, X } from "lucide-react";
 import { Button } from "../../components/button";
 import { FormEvent } from "react";
-import { api } from "../../lib/axios";
+// import { api } from "../../lib/axios";
 import { useParams } from "react-router-dom";
+import { useActivities } from "../../data/hooks/useActivities";
 
 interface CreateActivityModalProps {
-  closeCreateActivityModal: () => void
+  closeCreateActivityModal: () => void;
 }
 
 export function CreateActivityModal({
-  closeCreateActivityModal
+  closeCreateActivityModal,
 }: CreateActivityModalProps) {
-  const { tripId } = useParams()
-
+  const { tripId } = useParams();
+  const useActivitiesHook = useActivities();
 
   async function createActivity(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+    event.preventDefault();
 
-    const data = new FormData(event.currentTarget)
+    const data = new FormData(event.currentTarget);
 
-    const title = data.get('title')?.toString()
-    const occurs_at = data.get('occurs_at')?.toString()
+    const title = data.get("title")?.toString();
+    const occurs_at = data.get("occurs_at")?.toString();
 
-    await api.post(`/trips/${tripId}/activities`, {
-      title,
-      occurs_at
-    })
+    await useActivitiesHook.create(tripId as string, { title, occurs_at });
 
-    window.document.location.reload()
+    // await api.post(`/trips/${tripId}/activities`, {
+    //   title,
+    //   occurs_at,
+    // });
+
+    window.document.location.reload();
   }
 
   return (
@@ -37,7 +40,10 @@ export function CreateActivityModal({
           <div className="flex items-center justify-between">
             <h2 className="font-lg font-semibold">Cadastrar atividade</h2>
             <button>
-              <X className="size-5 text-zinc-400" onClick={closeCreateActivityModal} />
+              <X
+                className="size-5 text-zinc-400"
+                onClick={closeCreateActivityModal}
+              />
             </button>
           </div>
 
@@ -45,7 +51,7 @@ export function CreateActivityModal({
             Todos convidados podem visualizar as atividades.
           </p>
         </div>
-        
+
         <form onSubmit={createActivity} className="space-y-3">
           <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
             <Tag className="text-zinc-400 size-5" />
@@ -66,11 +72,9 @@ export function CreateActivityModal({
             />
           </div>
 
-          <Button size="full">
-            Salvar atividade
-          </Button>
+          <Button size="full">Salvar atividade</Button>
         </form>
       </div>
     </div>
-  )
+  );
 }
