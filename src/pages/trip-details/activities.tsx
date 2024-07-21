@@ -1,34 +1,15 @@
 import { CircleCheck } from "lucide-react";
-// import { api } from "../../lib/axios";
-import { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useActivities } from "../../data/hooks/useActivities";
-
-interface Activity {
-  date: string;
-  activities: {
-    id: string;
-    title: string;
-    occurs_at: string;
-  }[];
-}
+import { useActivities } from "../../data/contexts/activities";
 
 export function Activities() {
-  const { tripId } = useParams();
-  const [activities, setActivities] = useState<Activity[]>([]);
-  const useActivitiesHook = useActivities();
-
-  const getActivities = useCallback(async (tripId: string) => {
-    const response = await useActivitiesHook.get(tripId);
-    setActivities(response);
-  }, []);
+  const { activities, getActivities } = useActivities();
 
   useEffect(() => {
-    getActivities(tripId as string);
-    // api.get(`trips/${tripId}/activities`).then(response => setActivities(response.data.activities))
-  }, [tripId, getActivities]);
+    getActivities();
+  }, [getActivities]);
 
   return (
     <div className="space-y-8">

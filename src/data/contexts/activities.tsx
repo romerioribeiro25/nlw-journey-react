@@ -21,7 +21,7 @@ interface Activity {
 interface ActivitiesContextType {
   activities: Activity[];
   setActivities: React.Dispatch<React.SetStateAction<Activity[]>>;
-  getActivities: (tripId: string) => Promise<void>;
+  getActivities: () => Promise<void>;
   createActivities: (createActivityDto: CreateActivityDto) => Promise<void>;
 }
 
@@ -39,20 +39,21 @@ export function ActivitiesProvider({ children }: ActivitiesProviderProps) {
   const [activities, setActivities] = useState<Activity[]>([]);
   const useActivities = useActivitiesHook();
 
-  const getActivities = useCallback(async (tripId: string) => {
-    const response = await useActivities.get(tripId);
+  const getActivities = useCallback(async () => {
+    console.log("getActivities");
+    const response = await useActivities.get(tripId as string);
     setActivities(response);
   }, []);
 
   async function createActivities(createActivityDto: CreateActivityDto) {
     await useActivities.create(tripId as string, createActivityDto);
-    await getActivities(tripId as string);
+    await getActivities();
   }
 
   useEffect(() => {
-    getActivities(tripId as string);
+    getActivities();
     // api.get(`trips/${tripId}/activities`).then(response => setActivities(response.data.activities))
-  }, [tripId, getActivities]);
+  }, [getActivities]);
 
   return (
     <ActivitiesContext.Provider
