@@ -20,6 +20,8 @@ interface LinksContextType {
   setLinks: React.Dispatch<React.SetStateAction<Link[]>>;
   getLinks: () => Promise<void>;
   createLinks: (createLinkDto: CreateLinkDto) => Promise<void>;
+  createLinkModal: boolean;
+  handleToggleCreateLinkModal: () => void;
 }
 
 const LinksContext = createContext<LinksContextType | undefined>(undefined);
@@ -31,8 +33,13 @@ interface LinksProviderProps {
 export function LinksProvider({ children }: LinksProviderProps) {
   const { tripId } = useParams();
 
-  const [links, setLinks] = useState<Link[]>([]);
   const useLinks = useLinksHook();
+  const [links, setLinks] = useState<Link[]>([]);
+  const [createLinkModal, setCreateLinkModal] = useState(false);
+
+  function handleToggleCreateLinkModal() {
+    setCreateLinkModal((prev) => !prev);
+  }
 
   const getLinks = useCallback(async () => {
     const response = await useLinks.get(tripId as string);
@@ -53,13 +60,22 @@ export function LinksProvider({ children }: LinksProviderProps) {
   }, []);
 
   return (
-    <LinksContext.Provider value={{ links, setLinks, createLinks, getLinks }}>
+    <LinksContext.Provider
+      value={{
+        links,
+        setLinks,
+        createLinks,
+        getLinks,
+        createLinkModal,
+        handleToggleCreateLinkModal,
+      }}
+    >
       {children}
     </LinksContext.Provider>
   );
 }
 
-export function useLinks(): LinksContextType {
+export function useLinksContext(): LinksContextType {
   const context = useContext(LinksContext);
   if (!context) {
     throw new Error("useLinks deve ser usado dentro de um LinksProvider");

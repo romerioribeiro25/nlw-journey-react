@@ -1,19 +1,13 @@
 import { FormEvent } from "react";
-import { Link, Tag, X } from "lucide-react";
+import { Link2, Tag, X } from "lucide-react";
 
 import { Button } from "@/components/button";
-import { useLinks } from "@/data/contexts/links";
+import { useLinksContext } from "@/data/contexts/links";
 
-interface CreateImportantLinkModalProps {
-  closeCreateImportantLinkModal: () => void;
-}
+export function CreateImportantLinkModal() {
+  const { createLinks, handleToggleCreateLinkModal } = useLinksContext();
 
-export function CreateImportantLinkModal({
-  closeCreateImportantLinkModal,
-}: CreateImportantLinkModalProps) {
-  const { createLinks } = useLinks();
-
-  async function createLink(event: FormEvent<HTMLFormElement>) {
+  async function handleCreateLink(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
@@ -23,7 +17,7 @@ export function CreateImportantLinkModal({
 
     await createLinks({ title, url });
 
-    closeCreateImportantLinkModal();
+    handleToggleCreateLinkModal();
   }
 
   return (
@@ -35,7 +29,7 @@ export function CreateImportantLinkModal({
             <button>
               <X
                 className="size-5 text-zinc-400"
-                onClick={closeCreateImportantLinkModal}
+                onClick={handleToggleCreateLinkModal}
               />
             </button>
           </div>
@@ -45,7 +39,7 @@ export function CreateImportantLinkModal({
           </p>
         </div>
 
-        <form onSubmit={createLink} className="space-y-3">
+        <form onSubmit={handleCreateLink} className="space-y-3">
           <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
             <Tag className="text-zinc-400 size-5" />
             <input
@@ -56,7 +50,7 @@ export function CreateImportantLinkModal({
           </div>
 
           <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
-            <Link className="text-zinc-400 size-5" />
+            <Link2 className="text-zinc-400 size-5" />
             <input
               name="url"
               placeholder="Qual o link? (Ex.: https://www.exemplo.com)"
