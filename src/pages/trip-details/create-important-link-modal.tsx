@@ -15,7 +15,12 @@ export function CreateImportantLinkModal() {
     const title = data.get("title")?.toString() || "";
     const url = data.get("url")?.toString() || "";
 
-    await createLinks({ title, url });
+    try {
+      await createLinks({ title, url });
+    } catch (error) {
+      console.log("catch");
+      console.error(error);
+    }
 
     handleToggleCreateLinkModal();
   }
