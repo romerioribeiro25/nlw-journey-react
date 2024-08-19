@@ -1,28 +1,37 @@
-import { FormEvent } from "react";
 import { Link2, Tag, X } from "lucide-react";
-
-import { Button } from "@/components/button";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useLinksContext } from "@/data/contexts/links";
+import { Button } from "@/components/button";
+
+// Definindo o esquema de validação com Zod
+const createLinkSchema = z.object({
+  title: z.string().min(1, "O título é obrigatório."),
+  url: z.string().url("Insira um URL válido."),
+});
+
+type CreateLinkFromData = z.infer<typeof createLinkSchema>;
 
 export function CreateImportantLinkModal() {
   const { createLinks, handleToggleCreateLinkModal } = useLinksContext();
 
-  async function handleCreateLink(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateLinkFromData>({
+    resolver: zodResolver(createLinkSchema),
+  });
 
-    const data = new FormData(event.currentTarget);
-
-    const title = data.get("title")?.toString() || "";
-    const url = data.get("url")?.toString() || "";
-
+  async function handleCreateLink({ title, url }: CreateLinkFromData) {
     try {
+      // Criando o link após a validação
       await createLinks({ title, url });
+      handleToggleCreateLinkModal();
     } catch (error) {
-      console.log("catch");
       console.error(error);
     }
-
-    handleToggleCreateLinkModal();
   }
 
   return (
@@ -44,24 +53,51 @@ export function CreateImportantLinkModal() {
           </p>
         </div>
 
-        <form onSubmit={handleCreateLink} className="space-y-3">
-          <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
-            <Tag className="text-zinc-400 size-5" />
-            <input
-              name="title"
-              placeholder="Descreva o link (Ex.: Hotel hospedagem)"
-              className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
-            />
-          </div>
+        <form onSubmit={handleSubmit(handleCreateLink)} className="space-y-3">
+          <>
+            <div
+              className={`h-14 flex-1 px-4 bg-zinc-950 border rounded-lg flex items-center gap-2 ${
+                errors.title ? "border-red-500" : " border-zinc-800"
+              }`}
+            >
+              <Tag className="text-zinc-400 size-5" />
+              <input
+                {...register("title")}
+                placeholder="Descreva o link (Ex.: Hotel hospedagem)"
+                className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+              />
+            </div>
 
-          <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
-            <Link2 className="text-zinc-400 size-5" />
-            <input
-              name="url"
-              placeholder="Qual o link? (Ex.: https://www.exemplo.com)"
-              className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
-            />
-          </div>
+            {errors.title && (
+              <div className="flex-1 px-4">
+                <span className="text-red-500 text-sm">
+                  {errors.title.message}
+                </span>
+              </div>
+            )}
+          </>
+
+          <>
+            <div
+              className={`h-14 flex-1 px-4 bg-zinc-950 border rounded-lg flex items-center gap-2 ${
+                errors.url ? "border-red-500" : " border-zinc-800"
+              }`}
+            >
+              <Link2 className="text-zinc-400 size-5" />
+              <input
+                {...register("url")}
+                placeholder="Qual o link? (Ex.: https://www.exemplo.com)"
+                className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+              />
+            </div>
+            {errors.url && (
+              <div className="flex-1 px-4">
+                <span className="text-red-500 text-sm">
+                  {errors.url.message}
+                </span>
+              </div>
+            )}
+          </>
 
           <Button size="full">Salvar Link</Button>
         </form>
