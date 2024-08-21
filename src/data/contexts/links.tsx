@@ -31,9 +31,9 @@ interface LinksProviderProps {
 }
 
 export function LinksProvider({ children }: LinksProviderProps) {
-  const { tripId } = useParams();
+  const { tripId } = useParams<{ tripId: string }>();
 
-  const useLinks = useLinksHook();
+  const { create: createLinksHook, get: getLinksHook } = useLinksHook();
   const [links, setLinks] = useState<Link[]>([]);
   const [createLinkModal, setCreateLinkModal] = useState(false);
 
@@ -42,22 +42,28 @@ export function LinksProvider({ children }: LinksProviderProps) {
   }
 
   const getLinks = useCallback(async () => {
-    const response = await useLinks.get(tripId as string);
-    setLinks(response);
-  }, [tripId, useLinks]);
+    if (tripId) {
+      const response = await getLinksHook(tripId);
+      setLinks(response);
+    }
+  }, [tripId, getLinksHook]);
 
   const createLinks = useCallback(
     async (createLinkDto: CreateLinkDto) => {
-      await useLinks.create(tripId as string, createLinkDto);
-      await getLinks();
+      if (tripId) {
+        await createLinksHook(tripId, createLinkDto);
+        await getLinks();
+      }
     },
-    [tripId, getLinks, useLinks]
+    [tripId, createLinksHook, getLinks]
   );
 
   useEffect(() => {
-    getLinks();
-    // api.get(`trips/${tripId}/activities`).then(response => setActivities(response.data.activities))
-  }, []);
+    if (tripId) {
+      getLinks();
+      // api.get(`trips/${tripId}/activities`).then(response => setActivities(response.data.activities))
+    }
+  }, [getLinks, tripId]);
 
   return (
     <LinksContext.Provider
