@@ -1,13 +1,7 @@
-import React, {
-  ReactNode,
-  useContext,
-  useState,
-  createContext,
-  useCallback,
-  useEffect,
-} from "react";
+import { ReactNode, useState, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { CreateActivityDto, useActivitiesHook } from "../hooks/useActivities";
+import { ActivitiesContext } from "./activities-context";
 
 interface Activity {
   date: string;
@@ -17,17 +11,6 @@ interface Activity {
     occurs_at: string;
   }[];
 }
-
-interface ActivitiesContextType {
-  activities: Activity[];
-  setActivities: React.Dispatch<React.SetStateAction<Activity[]>>;
-  getActivities: () => Promise<void>;
-  createActivities: (createActivityDto: CreateActivityDto) => Promise<void>;
-}
-
-const ActivitiesContext = createContext<ActivitiesContextType | undefined>(
-  undefined
-);
 
 interface ActivitiesProviderProps {
   children: ReactNode;
@@ -69,14 +52,4 @@ export function ActivitiesProvider({ children }: ActivitiesProviderProps) {
       {children}
     </ActivitiesContext.Provider>
   );
-}
-
-export function useActivities(): ActivitiesContextType {
-  const context = useContext(ActivitiesContext);
-  if (!context) {
-    throw new Error(
-      "useActivities deve ser usado dentro de um ActivitiesProvider"
-    );
-  }
-  return context;
 }

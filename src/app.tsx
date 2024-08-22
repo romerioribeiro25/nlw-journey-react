@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { CreateTripPage } from "@/pages/create-trip";
 import { TripDetailsPage } from "@/pages/trip-details";
 import { LinksProvider } from "@/data/contexts/links-provider";
-import { ActivitiesProvider } from "@/data/contexts/activities";
+import { ActivitiesProvider } from "@/data/contexts/activities-provider";
 
 const router = createBrowserRouter([
   {

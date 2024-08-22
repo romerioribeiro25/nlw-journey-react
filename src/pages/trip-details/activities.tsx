@@ -1,7 +1,7 @@
 import { CircleCheck } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useActivities } from "../../data/contexts/activities";
+import { useActivities } from "../../data/contexts/activities-context";
 
 export function Activities() {
   const { activities } = useActivities();
