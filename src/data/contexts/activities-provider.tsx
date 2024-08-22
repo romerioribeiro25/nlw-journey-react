@@ -17,22 +17,27 @@ interface ActivitiesProviderProps {
 }
 
 export function ActivitiesProvider({ children }: ActivitiesProviderProps) {
-  const { tripId } = useParams();
+  const { tripId } = useParams<{ tripId: string }>();
 
   const [activities, setActivities] = useState<Activity[]>([]);
-  const useActivities = useActivitiesHook();
+  const { create: createActivitesHook, get: getActivitesHook } =
+    useActivitiesHook();
 
   const getActivities = useCallback(async () => {
-    const response = await useActivities.get(tripId as string);
-    setActivities(response);
-  }, [tripId, useActivities]);
+    if (tripId) {
+      const response = await getActivitesHook(tripId);
+      setActivities(response);
+    }
+  }, [tripId, getActivitesHook]);
 
   const createActivities = useCallback(
     async (createActivityDto: CreateActivityDto) => {
-      await useActivities.create(tripId as string, createActivityDto);
-      await getActivities();
+      if (tripId) {
+        await createActivitesHook(tripId, createActivityDto);
+        await getActivities();
+      }
     },
-    [tripId, getActivities, useActivities]
+    [tripId, createActivitesHook, getActivities]
   );
 
   // async function createActivities(createActivityDto: CreateActivityDto) {
@@ -41,9 +46,11 @@ export function ActivitiesProvider({ children }: ActivitiesProviderProps) {
   // }
 
   useEffect(() => {
-    getActivities();
+    if (tripId) {
+      getActivities();
+    }
     // api.get(`trips/${tripId}/activities`).then(response => setActivities(response.data.activities))
-  }, []);
+  }, [tripId, getActivities]);
 
   return (
     <ActivitiesContext.Provider
