@@ -1,6 +1,6 @@
 import { ReactNode, useState, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { CreateActivityDto, useActivitiesHook } from "../hooks/useActivities";
+import { CreateActivityDto, useActivitiesHook } from "../hooks/use-activities";
 import { ActivitiesContext } from "./activities-context";
 
 interface Activity {

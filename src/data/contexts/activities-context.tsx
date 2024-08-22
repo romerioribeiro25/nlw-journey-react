@@ -1,5 +1,5 @@
 import React, { useContext, createContext } from "react";
-import { CreateActivityDto } from "../hooks/useActivities";
+import { CreateActivityDto } from "../hooks/use-activities";
 
 interface Activity {
   date: string;

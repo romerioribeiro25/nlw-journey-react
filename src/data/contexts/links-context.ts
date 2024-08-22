@@ -1,5 +1,5 @@
 import React, { useContext, createContext } from "react";
-import { CreateLinkDto } from "../hooks/useLinks";
+import { CreateLinkDto } from "../hooks/use-links";
 
 interface Link {
   id: string;

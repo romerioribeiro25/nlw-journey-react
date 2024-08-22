@@ -1,6 +1,6 @@
 import { ReactNode, useState, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { CreateLinkDto, useLinksHook } from "../hooks/useLinks";
+import { CreateLinkDto, useLinksHook } from "../hooks/use-links";
 import { LinksContext } from "./links-context";
 
 interface Link {
