@@ -1,6 +1,6 @@
 import { Link2, Plus } from "lucide-react";
 import { Button } from "../../components/button";
-import { useLinksContext } from "@/data/contexts/links";
+import { useLinksContext } from "@/data/contexts/links-context";
 import { CreateImportantLinkModal } from "./create-important-link-modal";
 
 export function ImportantLinks() {

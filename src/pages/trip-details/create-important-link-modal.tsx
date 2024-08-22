@@ -2,7 +2,7 @@ import { Link2, Tag, X } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLinksContext } from "@/data/contexts/links";
+import { useLinksContext } from "@/data/contexts/links-context";
 import { Button } from "@/components/button";
 
 // Definindo o esquema de validação com Zod

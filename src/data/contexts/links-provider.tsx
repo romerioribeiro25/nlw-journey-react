@@ -1,30 +1,13 @@
-import React, {
-  ReactNode,
-  useContext,
-  useState,
-  createContext,
-  useCallback,
-  useEffect,
-} from "react";
+import { ReactNode, useState, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { CreateLinkDto, useLinksHook } from "../hooks/useLinks";
+import { LinksContext } from "./links-context";
 
 interface Link {
   id: string;
   title: string;
   url: string;
 }
-
-interface LinksContextType {
-  links: Link[];
-  setLinks: React.Dispatch<React.SetStateAction<Link[]>>;
-  getLinks: () => Promise<void>;
-  createLinks: (createLinkDto: CreateLinkDto) => Promise<void>;
-  createLinkModal: boolean;
-  handleToggleCreateLinkModal: () => void;
-}
-
-const LinksContext = createContext<LinksContextType | undefined>(undefined);
 
 interface LinksProviderProps {
   children: ReactNode;
@@ -79,12 +62,4 @@ export function LinksProvider({ children }: LinksProviderProps) {
       {children}
     </LinksContext.Provider>
   );
-}
-
-export function useLinksContext(): LinksContextType {
-  const context = useContext(LinksContext);
-  if (!context) {
-    throw new Error("useLinks deve ser usado dentro de um LinksProvider");
-  }
-  return context;
 }
